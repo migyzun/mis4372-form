@@ -6,8 +6,6 @@
   Version: 2.0
   Description: Thank-you confirmation page that displays a summary
                of the submitted patient registration data.
-  Changes:
-  2.0 | Reads session data from process.php and renders full submission review
 -->
 <?php
 session_start();
