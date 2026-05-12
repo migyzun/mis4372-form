@@ -1,0 +1,176 @@
+/*
+ * Program name: homework4.css
+ * Name: Jose Miguel Zuniga
+ * Date Created: 09/23/2025
+ * Date Last Edited: 05/11/2026
+ * Version: 3.0
+ * Description: CSS for Divine Heaven Clinic patient registration form.
+ * Changes:
+ * 3.0 | Added .output table styles for review area and thankyou page
+ */
+
+* {
+    font-family: "Times New Roman", serif;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: #E5E7EB;
+    text-align: center;
+    padding-top: 150px;
+    padding-bottom: 200px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+main {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    margin: 0 auto;
+    width: 90%;
+    max-width: 800px;
+}
+
+/* ── Header ── */
+header { margin-bottom: 20px; }
+.sticky-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: white;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 10px 0;
+    text-align: center;
+}
+#welcomeMessage { color: #0066cc; font-weight: bold; margin: 10px 0; }
+#resetLink { color: #cc0000; text-decoration: underline; cursor: pointer; font-size: 14px; }
+
+/* ── Footer ── */
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    z-index: 1000;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    padding: 10px 0;
+    text-align: center;
+    color: #0A192F;
+}
+#footer-logo { width: 50px; height: auto; margin-bottom: 5px; }
+
+/* ── Form ── */
+form { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+#logo { width: 60px; height: auto; margin-bottom: 10px; }
+h1 { font-size: 28px; color: #1E3A5F; margin-bottom: 10px; }
+header p { font-size: 16px; color: #0A192F; }
+
+table { width: 100%; border-collapse: collapse; margin: 0 auto; }
+label { display: block; margin-bottom: 8px; color: #0A192F; font-weight: bold; text-align: left; }
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #A7F3D0;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus { border-color: #10B981; outline: none; }
+textarea { resize: vertical; min-height: 100px; }
+select { appearance: none; background-color: #fff; cursor: pointer; }
+input[type="radio"],
+input[type="checkbox"] { margin-right: 8px; }
+
+/* ── Fieldset ── */
+fieldset { border: 1px solid #A7F3D0; border-radius: 4px; padding: 15px; margin: 10px 0; }
+fieldset legend { color: #0A192F; font-weight: bold; padding: 0 10px; }
+fieldset label { display: block; margin-bottom: 10px; text-align: left; font-weight: normal; }
+
+/* ── Slider ── */
+.slider { text-align: center; margin: 20px 0; }
+#slider { width: 80%; margin: 0 auto; }
+#pain-value { display: block; margin-top: 10px; font-weight: bold; color: #10B981; }
+
+/* ── Buttons ── */
+.buttons { text-align: center; margin-top: 20px; }
+input[type="reset"],
+input[type="submit"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+input[type="reset"] { background-color: #3B82F6; color: #fff; margin-right: 10px; }
+input[type="reset"]:hover { background-color: #1E3A5F; }
+input[type="submit"] { background-color: #10B981; color: #fff; margin-right: 10px; }
+input[type="submit"]:hover { background-color: #0A192F; }
+input[type="button"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+input[type="button"][value="Review"]   { background-color: #8B5CF6; color: #fff; }
+input[type="button"][value="Review"]:hover   { background-color: #6D28D9; }
+input[type="button"][value="Validate"] { background-color: #F59E0B; color: #fff; }
+input[type="button"][value="Validate"]:hover { background-color: #D97706; }
+
+/* ── Remember Me ── */
+.remember-me-section { margin: 10px 0; }
+
+/* ── Table layout ── */
+.form th { text-align: center; font-size: 24px; color: #1E3A5F; padding-bottom: 20px; }
+td { padding: 10px; }
+
+/* ── Review / Output table (used by displayInput() and thankyou.php) ── */
+table.output {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table.output thead tr th {
+    background-color: #1E3A5F;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+    text-align: center;
+}
+table.output tbody tr td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #E5E7EB;
+    font-size: 14px;
+}
+table.output tbody tr td:first-child {
+    text-align: right;
+    font-weight: bold;
+    color: #374151;
+    width: 200px;
+}
+table.output tbody tr:nth-child(even) { background-color: #F0FDF4; }
+.outputdata { font-style: italic; color: #0A192F; background-color: #A7F3D0; }
+
+/* ── Review area wrapper ── */
+#reviewArea  { padding: 20px 0; margin-top: 20px; }
+
+/* ── Error messages ── */
+.error-message { color: #3B82F6; font-size: 0.8em; display: block; margin-top: 5px; }
+
+/* End of file: homework4.css */

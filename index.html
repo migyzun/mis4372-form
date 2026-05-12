@@ -1,0 +1,708 @@
+<!--
+Program name: homework4.html
+Name: Jose Miguel Zuniga
+Date Created: 09/23/2025
+Date Last Edited: 12/06/2025
+Version: 4.0
+Description: This is a form that will collect the users information with Fetch API, iFrames, Cookies, and Local Storage
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="homework4.css" rel="stylesheet">
+    <title>Homework 4 - HTML Form</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="sticky-header">
+        <img id="logo" src="logo.jpg" alt="company logo" />
+        <h1>Divine Heaven Clinic</h1>
+        <p>Today is: <span id="currentDate"></span></p>
+        <p id="welcomeMessage">Welcome New User!</p>
+        <a href="#" id="resetLink" style="display: none;">Not [Name]? Click here to start as a NEW USER.</a>
+    </header>
+    <hr>
+   
+    <main>
+        <!-- Map iframe -->
+        <div style="text-align: center; margin: 20px 0;">
+            <h3>Our Location</h3>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3464.1234567890!2d-95.3698!3d29.7604!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjnCsDQ1JzM3LjQiTiA5NcKwMjInMTEuMyJX!5e0!3m2!1sen!2sus!4v1234567890" 
+                    width="600" 
+                    height="200" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+            </iframe>
+        </div>
+
+        <!-- FIX 1: <form> wraps <table>. Illegal <div> inside <table> removed.
+                   The .format class is moved directly onto the <table> element. -->
+        <form id="patientForm" action="process.php" method="POST" onsubmit="return checkFormValidity();">
+            <table class="format">              
+                    <tr class="form">
+                        <th class="form" colspan="3">Patient Form</th>
+                    </tr>
+                    <!-- Username -->
+                    <tr>
+                        <td class="table"><label for="userID">Username:</label></td>
+                        <td><input
+                            type="text" id="userID" name="userID" size="15" minlength="5" maxlength="20" placeholder="Enter Username"  
+                            title="Username must be 5-20 characters, start with a letter, and contain only letters, numbers, underscores, or dashes"
+                            oninput="validateUserID(); saveToLocalStorage();"
+                            onblur="validateUserID(); saveToLocalStorage();"
+                            pattern="^[a-zA-Z_-][a-zA-Z0-9_-]{4,29}$"
+                            required>
+                            <span class="error-message" id="userIDError"></span>
+                        </td>
+                    </tr>
+                    <!-- Password -->
+                    <tr>
+                        <td class="table"><label for="password">Password:</label></td>
+                        <td><input
+                            type="password" id="password" name="password" size="15"
+                            placeholder="Enter Password"
+                            title="Password must be 8-30 characters long, include at least one uppercase letter, one lowercase letter, and one digit."
+                            oninput="validatePassword()"
+                            onblur="validatePassword()"
+                            required>
+                            <span class="error-message" id="passwordError"></span>
+                        </td>
+                    </tr>
+                    <!-- Re-enter Password -->
+                    <tr>
+                        <td class="table"><label for="re_password">Re-enter Password: </label></td>
+                        <td>
+                            <input
+                            type="password" id="re_password" name="re_password" size="15"
+                            placeholder="Re-enter Password"
+                            title="Passwords must match"
+                            oninput="validatePasswordMatch()"
+                            onblur="validatePasswordMatch()" 
+                            required>
+                            <span class="error-message" id="passwordMatchError"></span>
+                        </td>
+                    </tr>
+                   
+                    <tr>
+                        <td colspan="2"><hr></td>
+                    </tr>
+
+                    <!-- First Name -->
+                    <tr>
+                        <td class="table"><label for="firstName">First Name:</label></td>
+                        <td><input
+                            type="text" id="firstName" name="firstName" size="15" maxlength="30"
+                            placeholder="Enter First Name"
+                            pattern="[A-Za-z'-]{1,30}"
+                            oninput="validateFirstName(); saveToLocalStorage();"
+                            onblur="validateFirstName(); saveToLocalStorage();"
+                            title="First name must contain 1 to 30 characters, letters, apostrophes, and dashes only."
+                            required>
+                            <span class="error-message" id="firstNameError"></span>
+                        </td>
+                    </tr>
+                    <!-- Middle Initial -->
+                    <tr>
+                        <td class="table"><label for="middleInitial">Middle Initial:</label></td>
+                        <td><input
+                            type="text" id="middleInitial" name="middleInitial" size="1"
+                            maxlength="1"
+                            placeholder="M."
+                            pattern="[A-Za-z]"
+                            title="Please enter a single letter."
+                            oninput="validateMiddleInitial(); saveToLocalStorage();"
+                            onblur="validateMiddleInitial(); saveToLocalStorage();">
+                            <span class="error-message" id="middleInitialError"></span>
+                        </td>
+                    </tr>
+                    <!-- Last Name -->
+                    <tr>
+                        <td class="table"><label for="lastName">Last Name:</label></td>
+                        <td><input
+                            type="text"
+                            id="lastName"
+                            name="lastName"
+                            maxlength="30"
+                            size="15"  
+                            pattern="[A-Za-z' -]{1,30}"
+                            title="Please enter a valid Last Name (1 to 30 characters)"
+                            placeholder="Enter Last Name"
+                            oninput="validateLastName(); saveToLocalStorage();"
+                            onblur="validateLastName(); saveToLocalStorage();"
+                            required>
+                            <span class="error-message" id="lastNameError"></span>
+                        </td>
+                    </tr>
+                    <!-- Date of Birth -->
+                    <tr>
+                        <td class="table"><label for="dobMonth">Date of Birth:</label></td>
+                        <td>
+                            <input type="text" id="dobMonth" name="dobMonth" placeholder="MM" maxlength="2" size="2"
+                                   title="Month (01-12)" 
+                                   oninput="dobValidation(); saveToLocalStorage();" 
+                                   onblur="dobValidation(); saveToLocalStorage();" 
+                                   required>
+                            <span>/</span>
+                            <input type="text" id="dobDay" name="dobDay" placeholder="DD" maxlength="2" size="2"
+                                   title="Day (01-31)" 
+                                   oninput="dobValidation(); saveToLocalStorage();" 
+                                   onblur="dobValidation(); saveToLocalStorage();" 
+                                   required>
+                            <span>/</span>
+                            <input type="text" id="dobYear" name="dobYear" placeholder="YYYY" maxlength="4" size="4"
+                                   title="Year (not future, not more than 120 years ago)" 
+                                   oninput="dobValidation(); saveToLocalStorage();" 
+                                   onblur="dobValidation(); saveToLocalStorage();" 
+                                   required>
+                            <span class="error-message" id="dobError"></span>
+                        </td>
+                    </tr>
+                    <!-- Social Security -->
+                    <tr>
+                        <td class="table"><label for="ssn">SSN:</label></td>
+                        <td><input
+                            type="password"
+                            id="ssn"
+                            name="ssn"
+                            minlength="9"
+                            maxlength="11"
+                            placeholder="XXX-XX-XXXX"
+                            title="Enter SSN in XXX-XX-XXXX format"
+                            oninput="formatSSN()"
+                            onblur="validateSSN()"
+                            required>
+                            <span class="error-message" id="ssnError"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><hr></td>
+                    </tr>
+                    <!-- Address -->
+                    <tr>
+                        <td class="table"><label for="address1">Address 1:</label></td>
+                        <td><input
+                            type="text"
+                            id="address1"
+                            name="address1"
+                            placeholder="Street address"
+                            minlength="2"
+                            maxlength="30"
+                            title="Please enter your address, 2 to 30 characters."
+                            oninput="validateAddress(); saveToLocalStorage();"
+                            onblur="validateAddress(); saveToLocalStorage();"
+                            required>
+                            <span class="error-message" id="addressError"></span>
+                        </td>
+                    </tr>
+                    <!-- Address 2 -->
+                    <tr>
+                        <td class="table"><label for="address2">Address 2:</label></td>
+                        <td>
+                            <input 
+                            type="text" 
+                            id="address2" 
+                            name="address2" 
+                            placeholder="Apt., suite, etc. (optional)" 
+                            minlength="2" 
+                            maxlength="30"
+                            title="Please enter address, 2 to 30 characters if provided."
+                            oninput="validateAddress2(); saveToLocalStorage();"
+                            onblur="validateAddress2(); saveToLocalStorage();">
+                            <span class="error-message" id="address2Error"></span>
+                        </td>
+                    </tr>
+                    <!-- City -->
+                    <tr>
+                        <td class="table"><label for="city">City:</label></td>
+                        <td><input
+                            type="text"
+                            id="city"
+                            name="city"
+                            placeholder="Enter City"
+                            size="10"
+                            minlength="2"
+                            maxlength="30"
+                            oninput="validateCity(); saveToLocalStorage();"
+                            onblur="validateCity(); saveToLocalStorage();" 
+                            required>
+                            <span class="error-message" id="cityError"></span>
+                        </td>
+                    </tr>
+                    <!-- State -->
+                    <tr>
+                        <td class="table"><label for="state">State:</label></td>
+                        <td>
+                            <select id="state" name="state" onchange="validateState(); saveToLocalStorage();" onblur="validateState(); saveToLocalStorage();" required>
+                                <option value="">Loading states...</option>
+                            </select>
+                            <span class="error-message" id="stateError"></span>
+                        </td>
+                    </tr>
+                    <!-- Zip Code -->
+                    <tr>
+                        <td class="table"><label for="zipCode">Zip Code:</label></td>
+                        <td><input
+                            type="text"
+                            id="zipCode"
+                            name="zipCode"
+                            placeholder="Enter ZIP"
+                            pattern="[0-9]{5}"
+                            size="6"
+                            minlength="5"
+                            maxlength="5"
+                            title="Please enter Zip-Code (5 digits)"
+                            oninput="validateZipCode(); saveToLocalStorage();"
+                            onblur="validateZipCode(); saveToLocalStorage();"
+                            required>
+                            <span class="error-message" id="zipCodeError"></span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2"><hr></td>
+                    </tr>
+
+                    <!-- Email Address -->
+                    <tr>
+                        <td class="table"><label for="email">Email:</label></td>
+                        <td>
+                            <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="name@domain.tld" 
+                            maxlength="40"
+                            title="Please enter a valid email address"
+                            oninput="validateEmail(); saveToLocalStorage();"
+                            onblur="validateEmail(); saveToLocalStorage();"
+                            required>
+                            <span class="error-message" id="emailError"></span>
+                        </td>
+                    </tr>
+
+                    <!-- Phone Number -->
+                    <tr>
+                        <td class="table"><label for="phone">Phone #:</label></td>
+                        <td>
+                            <input 
+                            type="text" 
+                            id="phoneNumber" 
+                            name="phoneNumber" 
+                            placeholder="XXX-XXX-XXXX"
+                            title="Please enter a valid phone number (XXX-XXX-XXXX)"
+                            maxlength="14" 
+                            oninput="formatPhoneNumber(); saveToLocalStorage();"
+                            onblur="validatePhoneNumber(); saveToLocalStorage();"
+                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                            required>
+                            <span class="error-message" id="phoneError"></span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2"><hr></td>
+                    </tr>
+
+                    <!-- Gender -->
+                    <tr>
+                        <td class="table"><label id="gender">Gender:</label></td>
+                        <td>
+                            <input type="radio" name="msex" value="Male" onchange="checkFormValidity(); saveToLocalStorage();">
+                            <span>Male</span>
+                            <input type="radio" name="msex" value="Female" onchange="checkFormValidity(); saveToLocalStorage();">
+                            <span>Female</span>
+                            <input type="radio" name="msex" value="Other" onchange="checkFormValidity(); saveToLocalStorage();">
+                            <span>Other</span>
+                            <span class="error-message" id="genderError"></span>
+                        </td>
+                    </tr>
+                    <!-- Marital Status -->
+                    <tr>
+                        <td class="table"><label id="marital">What is your marital status?</label></td>
+                        <td>
+                            <input type="radio" name="marital_status" value="Single" onchange="checkFormValidity(); saveToLocalStorage();">
+                            <span>Single</span>
+                            <input type="radio" name="marital_status" value="Married" onchange="checkFormValidity(); saveToLocalStorage();">
+                            <span>Married</span>
+                            <input type="radio" name="marital_status" value="Divorced" onchange="checkFormValidity(); saveToLocalStorage();">
+                            <span>Divorced</span>
+                            <span class="error-message" id="maritalError"></span>
+                        </td>
+                    </tr>
+                    <!-- Insurance -->
+                    <tr>
+                        <td class="table"><label id="insurance">Do you have insurance?</label></td>
+                        <td>
+                            <input type="radio" name="insurance" value="Yes" onchange="checkFormValidity(); saveToLocalStorage();">
+                            <span>Yes</span>
+                            <input type="radio" name="insurance" value="No" onchange="checkFormValidity(); saveToLocalStorage();">
+                            <span>No</span>
+                            <input type="radio" name="insurance" value="Unsure" onchange="checkFormValidity(); saveToLocalStorage();">
+                            <span>Unsure</span>
+                            <span class="error-message" id="insuranceError"></span>
+                        </td>
+                    </tr>
+                    <!-- Reason for Visit -->
+                    <tr>
+                        <td class="table"><label for="description"> What is your reasoning for visiting us today? </label></td>
+                        <td><textarea
+                            id="description"
+                            name="description"
+                            rows="6"
+                            cols="50"
+                            pattern="^[^\"\\]*$"
+                            title="Please avoid using double quotes"
+                            oninput="validateDescription(); saveToLocalStorage();"
+                            onblur="validateDescription(); saveToLocalStorage();"></textarea>
+                            <span class="error-message" id="descriptionError"></span>
+                        </td>
+                    </tr>
+                    <!-- Medical Conditions Checkboxes -->
+                    <tr>
+                        <td class="check" colspan="2">
+                            <fieldset id="conditionsFieldset">
+                                <legend>Do you have or have had any of the following?:</legend>
+                                <div id="conditionsContainer">Loading conditions...</div>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <!-- Pain Scale Slider -->
+                    <tr>
+                        <td class="slider" colspan="2">
+                            <fieldset>
+                                <legend>What is your pain level?:</legend>
+                                0<input
+                                type="range"
+                                id="slider"
+                                name="PainLevel"
+                                min="0"
+                                max="10"
+                                value="0"
+                                oninput="updatePainLevel(this.value); saveToLocalStorage();">10
+                                <br>
+                                Your current pain level: <span id="painValue">0</span>
+                                <span class="error-message" id="painError"></span>
+                            </fieldset>
+                        </td>
+                    </tr>
+
+                    <!-- Remember Me Checkbox -->
+                    <tr>
+                        <td class="buttons" colspan="2">
+                            <div class="remember-me-section">
+                                <input type="checkbox" id="rememberMe" name="rememberMe" checked onchange="handleRememberMe()">
+                                <label for="rememberMe"><strong>Remember Me</strong> (saves your information for next visit)</label>
+                            </div>
+                        </td>
+                    </tr>
+       
+                    <!-- Buttons -->
+                    <tr>
+                        <td class="buttons" colspan="2">
+                            <input type="reset" value="Clear" onclick="clearAllErrors()">
+                            <input type="button" class="submit-button" value="Review" onclick="displayInput()">
+                            <input type="button" value="Validate" id="validateButton" onclick="validateForm()">
+                            <input type="submit" value="Submit" id="submitButton" style="display:none;">
+                        </td>
+                    </tr>
+            </table>
+        </form>
+       
+        <div id="reviewArea"></div>
+        <div id="validationSummary"></div>
+    </main>
+    <hr>
+    
+    <!-- Footer -->
+    <footer>
+        <div>
+            <a href="https://www.uh.edu/">
+                <img id="footer-logo" src="logo.jpg" alt="Footer Logo" />
+            </a>
+            <p>
+                <a href="mailto:migyzuniga@gmail.com">migyzuniga@gmail.com</a> | 
+                <a href="mailto:migyzuniga@gmail.com" class="contact">Contact Us!</a> | 
+                9999 Elgin Rd, Houston, TX 77004
+            </p>
+        </div>
+    </footer>
+
+    <script src="homework4.js"></script>
+
+    <!-- COOKIE AND LOCAL STORAGE SCRIPT -->
+    <script>
+    // ============================================
+    // FETCH API - Load States Dropdown
+    // ============================================
+    async function loadStates() {
+        try {
+            const response = await fetch('states.json');
+            const states = await response.json();
+            
+            const stateSelect = document.getElementById('state');
+            stateSelect.innerHTML = '<option value="">Select a State</option>';
+            
+            states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state.abbreviation;
+                option.textContent = state.name;
+                stateSelect.appendChild(option);
+            });
+            
+            console.log('States loaded successfully');
+        } catch (error) {
+            console.error('Error loading states:', error);
+        }
+    }
+
+    // ============================================
+    // FETCH API - Load Medical Conditions
+    // ============================================
+    async function loadMedicalConditions() {
+        try {
+            const response = await fetch('conditions.json');
+            const conditions = await response.json();
+            
+            const container = document.getElementById('conditionsContainer');
+            container.innerHTML = '';
+            
+            conditions.forEach(condition => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = condition.id;
+                checkbox.name = 'medicalConditions';
+                checkbox.value = condition.value;
+                checkbox.onchange = function() {
+                    saveToLocalStorage();
+                };
+                
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(' ' + condition.label));
+                
+                if (condition.id === 'other') {
+                    const textInput = document.createElement('input');
+                    textInput.type = 'text';
+                    textInput.maxLength = 30;
+                    textInput.placeholder = 'Specify...';
+                    textInput.oninput = function() {
+                        saveToLocalStorage();
+                    };
+                    label.appendChild(document.createTextNode(' '));
+                    label.appendChild(textInput);
+                }
+                
+                container.appendChild(label);
+            });
+            
+            console.log('Medical conditions loaded successfully');
+        } catch (error) {
+            console.error('Error loading medical conditions:', error);
+        }
+    }
+
+    // ============================================
+    // COOKIE FUNCTIONS 
+    // ============================================
+    function setCookie(name, value, hours) {
+        var expires = "";
+        if (hours) {
+            var date = new Date();
+            date.setTime(date.getTime() + (hours * 60 * 60 * 1000)); 
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        console.log(`Cookie set: ${name}=${value} (expires in ${hours} hours)`);
+    }
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+    function deleteCookie(name) {
+        document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+        console.log(`Cookie deleted: ${name}`);
+    }
+
+    function isRememberMeChecked() {
+        return document.getElementById("rememberMe").checked;
+    }
+
+    // ============================================
+    // LOCAL STORAGE FUNCTIONS
+    // ============================================
+    function saveToLocalStorage() {
+        if (!isRememberMeChecked()) {
+            return;
+        }
+
+        const formData = {
+            userID: document.getElementById("userID").value,
+            firstName: document.getElementById("firstName").value,
+            middleInitial: document.getElementById("middleInitial").value,
+            lastName: document.getElementById("lastName").value,
+            dobMonth: document.getElementById("dobMonth").value,
+            dobDay: document.getElementById("dobDay").value,
+            dobYear: document.getElementById("dobYear").value,
+            address1: document.getElementById("address1").value,
+            address2: document.getElementById("address2").value,
+            city: document.getElementById("city").value,
+            state: document.getElementById("state").value,
+            zipCode: document.getElementById("zipCode").value,
+            email: document.getElementById("email").value,
+            phoneNumber: document.getElementById("phoneNumber").value,
+            description: document.getElementById("description").value,
+            painLevel: document.getElementById("slider").value
+        };
+
+        const gender = document.querySelector('input[name="msex"]:checked');
+        if (gender) formData.gender = gender.value;
+
+        const marital = document.querySelector('input[name="marital_status"]:checked');
+        if (marital) formData.maritalStatus = marital.value;
+
+        const insurance = document.querySelector('input[name="insurance"]:checked');
+        if (insurance) formData.insurance = insurance.value;
+
+        const conditions = [];
+        document.querySelectorAll('input[name="medicalConditions"]:checked').forEach(cb => {
+            conditions.push(cb.value);
+        });
+        formData.medicalConditions = conditions;
+
+        localStorage.setItem('patientFormData', JSON.stringify(formData));
+    }
+
+    function loadFromLocalStorage() {
+        const savedData = localStorage.getItem('patientFormData');
+        if (!savedData) return;
+
+        try {
+            const formData = JSON.parse(savedData);
+            
+            if (formData.userID) document.getElementById("userID").value = formData.userID;
+            if (formData.firstName) document.getElementById("firstName").value = formData.firstName;
+            if (formData.middleInitial) document.getElementById("middleInitial").value = formData.middleInitial;
+            if (formData.lastName) document.getElementById("lastName").value = formData.lastName;
+            if (formData.dobMonth) document.getElementById("dobMonth").value = formData.dobMonth;
+            if (formData.dobDay) document.getElementById("dobDay").value = formData.dobDay;
+            if (formData.dobYear) document.getElementById("dobYear").value = formData.dobYear;
+            if (formData.address1) document.getElementById("address1").value = formData.address1;
+            if (formData.address2) document.getElementById("address2").value = formData.address2;
+            if (formData.city) document.getElementById("city").value = formData.city;
+            if (formData.state) document.getElementById("state").value = formData.state;
+            if (formData.zipCode) document.getElementById("zipCode").value = formData.zipCode;
+            if (formData.email) document.getElementById("email").value = formData.email;
+            if (formData.phoneNumber) document.getElementById("phoneNumber").value = formData.phoneNumber;
+            if (formData.description) document.getElementById("description").value = formData.description;
+            if (formData.painLevel) {
+                document.getElementById("slider").value = formData.painLevel;
+                document.getElementById("painValue").textContent = formData.painLevel;
+            }
+
+            if (formData.gender) {
+                const genderRadio = document.querySelector(`input[name="msex"][value="${formData.gender}"]`);
+                if (genderRadio) genderRadio.checked = true;
+            }
+            if (formData.maritalStatus) {
+                const maritalRadio = document.querySelector(`input[name="marital_status"][value="${formData.maritalStatus}"]`);
+                if (maritalRadio) maritalRadio.checked = true;
+            }
+            if (formData.insurance) {
+                const insuranceRadio = document.querySelector(`input[name="insurance"][value="${formData.insurance}"]`);
+                if (insuranceRadio) insuranceRadio.checked = true;
+            }
+
+            if (formData.medicalConditions && Array.isArray(formData.medicalConditions)) {
+                formData.medicalConditions.forEach(condition => {
+                    const checkbox = document.querySelector(`input[name="medicalConditions"][value="${condition}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+        } catch (error) {
+            console.error('Error loading from localStorage:', error);
+        }
+    }
+
+    function clearLocalStorage() {
+        localStorage.removeItem('patientFormData');
+    }
+
+    function handleRememberMe() {
+        if (isRememberMeChecked()) {
+            saveToLocalStorage();
+        } else {
+            clearLocalStorage();
+            deleteCookie('firstName');
+        }
+    }
+
+    // ============================================
+    // PAGE LOAD 
+    // ============================================
+    window.addEventListener('DOMContentLoaded', function() {
+        console.log('Page loaded');
+        
+        loadStates();
+        loadMedicalConditions();
+        
+        var firstName = getCookie('firstName');
+        if (firstName) {
+            document.getElementById("welcomeMessage").innerText = "Welcome back, " + firstName + "!";
+            document.getElementById("resetLink").innerText = "Not " + firstName + "? Click here to start as a NEW USER.";
+            document.getElementById("resetLink").style.display = "block";
+
+            if (isRememberMeChecked()) {
+                loadFromLocalStorage();
+            }
+        } else {
+            document.getElementById("welcomeMessage").innerText = "Welcome New User!";
+            document.getElementById("resetLink").style.display = "none";
+        }
+
+        document.getElementById("resetLink").addEventListener("click", function(e) {
+            e.preventDefault();
+            
+            deleteCookie('firstName');
+            clearLocalStorage();
+            
+            document.getElementById('patientForm').reset();
+            clearAllErrors();
+            
+            document.getElementById("welcomeMessage").innerText = "Welcome New User!";
+            document.getElementById("resetLink").style.display = "none";
+            document.getElementById("rememberMe").checked = false;
+        });
+
+        // FIX 2 & 3: Save cookie/localStorage BEFORE allowing the native POST to process.php.
+        // e.preventDefault() and the JS redirect are removed so the browser submits normally.
+        document.getElementById("patientForm").addEventListener("submit", function() {
+            var firstName = document.getElementById("firstName").value;
+            
+            if (isRememberMeChecked()) {
+                // Persist data so it survives the page reload after PHP redirects back
+                setCookie('firstName', firstName, 48);
+                saveToLocalStorage();
+            } else {
+                deleteCookie('firstName');
+                clearLocalStorage();
+            }
+            
+            // No e.preventDefault() — the form proceeds with its native POST to process.php
+        });
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+[
+  {"id": "HeartDisease", "value": "Heart Disease", "label": "Heart Disease"},
+  {"id": "Measles", "value": "Measles", "label": "Measles"},
+  {"id": "Meningitis", "value": "Meningitis", "label": "Meningitis"},
+  {"id": "Hepatitis", "value": "Hepatitis", "label": "Hepatitis"},
+  {"id": "Cancer", "value": "Cancer", "label": "Cancer"},
+  {"id": "other", "value": "Other", "label": "Other"}
+]
