@@ -5,8 +5,6 @@
  * Date Last Edited: 05/11/2026
  * Version: 5.0
  * Description: Homework 4 JS - all validation, cookie/localStorage, Fetch API
- * Changes:
- * 5.0 | Added zip-code auto-fill via zippopotam.us API
  */
 
 // ── PAIN LEVEL ────────────────────────────────────────────
