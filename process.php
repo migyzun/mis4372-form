@@ -2,14 +2,11 @@
 /*
  * Program Name: process.php
  * Name: Jose Miguel Zuniga
- * Date Created: 11/14/2025
  * Date Last Edited: 05/11/2026
  * Version: 2.0
  * Description: Receives POST data from the patient registration form,
  *              validates server-side, inserts into patient_db via PDO,
  *              then redirects to thankyou.php with session data.
- * Changes:
- * 2.0 | Upgraded from mysqli to PDO, added all fields, session pass-through
  */
 
 session_start();
@@ -76,7 +73,6 @@ if (!in_array($insurance,['Yes','No','Unsure']))            $errors[] = "Please 
 
 // Stop if server-side errors
 if (!empty($errors)) {
-    // In a real app you'd pass these back; for now show them plainly
     echo "<h3 style='color:red;font-family:sans-serif;'>Submission Error</h3><ul style='font-family:sans-serif;'>";
     foreach ($errors as $e) echo "<li>" . htmlspecialchars($e) . "</li>";
     echo "</ul><a href='index.html'>Go Back</a>";
