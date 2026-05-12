@@ -1,7 +1,6 @@
 <!--
   Program Name: thankyou.php
   Name: Jose Miguel Zuniga
-  Date Created: 11/14/2025
   Date Last Edited: 05/11/2026
   Version: 2.0
   Description: Thank-you confirmation page that displays a summary
