@@ -1,13 +1,10 @@
 -- ============================================================
 -- Program Name: schema.sql
 -- Name: Jose Miguel Zuniga
--- Date Created: 09/23/2025
 -- Date Last Edited: 05/11/2026
 -- Version: 2.0
 -- Description: Creates the patient_db database and patients table
 --              for the Divine Heaven Clinic patient registration form.
--- Changes:
--- 2.0 | Added all form fields: conditions, pain level, marital, insurance
 -- ============================================================
 
 CREATE DATABASE IF NOT EXISTS patient_db;
